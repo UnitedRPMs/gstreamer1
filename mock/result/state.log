@@ -1,0 +1,13 @@
+2016-06-23 11:15:57,935 - Mock Version: 1.2.18
+2016-06-23 11:15:58,410 - Start: yum install
+2016-06-23 11:18:10,225 - Finish: yum install
+2016-06-23 11:18:11,745 - Start: creating cache
+2016-06-23 11:18:54,516 - Finish: creating cache
+2016-06-23 11:18:54,520 - Finish: chroot init
+2016-06-23 11:18:54,816 - Start: buildsrpm
+2016-06-23 11:18:54,841 - Start: rpmbuild -bs
+2016-06-23 11:18:55,267 - Finish: rpmbuild -bs
+2016-06-23 11:18:55,284 - Finish: buildsrpm
+2016-06-23 11:18:55,287 - Start: clean chroot
+2016-06-23 11:19:05,734 - Finish: clean chroot
+2016-06-23 11:19:05,737 - Finish: run
