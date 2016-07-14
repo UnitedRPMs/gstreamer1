@@ -9,7 +9,7 @@
 %global         _gobject_introspection  1.31.1
 
 Name:           gstreamer1
-Version:        1.8.2
+Version:        1.9.1
 Release:        1%{?gitcommit:.git%{shortcommit}}%{?dist}
 Summary:        GStreamer streaming media framework runtime
 
@@ -211,6 +211,9 @@ find $RPM_BUILD_ROOT -name '*.a' -exec rm -f {} ';'
 
 
 %changelog
+
+* Fri Jul 08 2016 David Vásquez <davidjeremias82 AT gmail DOT com> 1.9.1-1
+- Updated to 1.9.1
 
 * Thu Jun 23 2016 David Vásquez <davidjeremias82 AT gmail DOT com> 1.8.2-1
 - Updated

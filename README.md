@@ -2,7 +2,7 @@
  
 Summary:        GStreamer streaming media framework runtime
  
-Version:        1.8.2
+Version:        1.9.1
  
 License:        LGPLv2+
  
