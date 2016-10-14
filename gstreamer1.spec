@@ -9,7 +9,7 @@
 %global         _gobject_introspection  1.31.1
 
 Name:           gstreamer1
-Version:        1.9.1
+Version:        1.9.2
 Release:        1%{?gitcommit:.git%{shortcommit}}%{?dist}
 Summary:        GStreamer streaming media framework runtime
 
@@ -182,8 +182,6 @@ find $RPM_BUILD_ROOT -name '*.a' -exec rm -f {} ';'
 %{_includedir}/gstreamer-%{majorminor}/gst/controller/*.h
 %{_includedir}/gstreamer-%{majorminor}/gst/net/*.h
 
-%{_libdir}/gstreamer-%{majorminor}/include/gst/*.h
-
 %{_libdir}/libgstreamer-%{majorminor}.so
 %{_libdir}/libgstbase-%{majorminor}.so
 %{_libdir}/libgstcheck-%{majorminor}.so
@@ -211,6 +209,9 @@ find $RPM_BUILD_ROOT -name '*.a' -exec rm -f {} ';'
 
 
 %changelog
+
+* Thu Oct 06 2016 David Vásquez <davidjeremias82 AT gmail DOT com> 1.9.2-1
+- Updated to 1.9.2
 
 * Fri Jul 08 2016 David Vásquez <davidjeremias82 AT gmail DOT com> 1.9.1-1
 - Updated to 1.9.1
