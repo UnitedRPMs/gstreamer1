@@ -1,8 +1,9 @@
 %global         majorminor      1.0
 
-#global gitrel     140
-#global gitcommit  a70055b58568f7304ba46bd8742232337013487b
-#global shortcommit %(c=%{gitcommit}; echo ${c:0:5})
+%global gitdate 20170202
+%global commit0 4b7a521e12f59cd218de88de66a2b31a8bd1fcc0
+%global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
+%global gver .%{gitdate}git%{shortcommit0}
 
 %global         _glib2                  2.32.0
 %global         _libxml2                2.4.0
@@ -10,22 +11,16 @@
 
 Name:           gstreamer1
 Version:        1.11.1
-Release:        1%{?dist}
+Release:        1%{?gver}%{dist}
 Summary:        GStreamer streaming media framework runtime
 
 License:        LGPLv2+
 URL:            http://gstreamer.freedesktop.org/
-%if 0%{?gitrel}
-# git clone git://anongit.freedesktop.org/gstreamer/gstreamer
-# cd gstreamer; git reset --hard %{gitcommit}; ./autogen.sh; make; make distcheck
-Source0:        gstreamer-%{version}.tar.xz
-%else
-Source0:        http://gstreamer.freedesktop.org/src/gstreamer/gstreamer-%{version}.tar.xz
-%endif
+Source0: 	https://github.com/GStreamer/gstreamer/archive/%{commit0}.tar.gz#/%{name}-%{shortcommit0}.tar.gz
 
 BuildRequires:  glib2-devel >= %{_glib2}
 BuildRequires:  libxml2-devel >= %{_libxml2}
-BuildRequires:  gobject-introspection-devel >= %{_gobject_introspection}
+BuildRequires:  gobject-introspection-devel 
 BuildRequires:  bison
 BuildRequires:  flex
 BuildRequires:  m4
@@ -48,6 +43,10 @@ BuildRequires:  transfig
 BuildRequires:  netpbm-progs
 BuildRequires:  tetex-dvips
 BuildRequires:  ghostscript
+BuildRequires:	gettext-devel
+BuildRequires:	git
+BuildRequires:	autoconf-archive
+BuildRequires:	intltool
 %if !0%{?rhel}
 BuildRequires:  xfig
 %endif
@@ -86,20 +85,27 @@ GStreamer streaming media framework.
 
 
 %prep
-%setup -q -n gstreamer-%{version}
-
+%autosetup -n gstreamer-%{commit0}  
+rm -rf common && git clone git://anongit.freedesktop.org/gstreamer/common 
 
 %build
+NOCONFIGURE=1 ./autogen.sh
+
+%if 0%{?fedora} >= 26
+CFLAGS="-g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wall -Wno-error" CXXFLAGS="-g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wall -Wno-error" CPPFLAGS="-Wdate-time -D_FORTIFY_SOURCE=2" LDFLAGS="-Wl,-z,relro -Wl,-z,defs -Wl,-O1 -Wl,--as-needed"
+%endif
+
 %configure \
   --with-package-name='Fedora GStreamer package' \
   --with-package-origin='http://download.fedoraproject.org' \
   --enable-gtk-doc \
   --enable-debug \
-  --disable-tests --disable-examples
+  --disable-static \
+  --disable-tests --disable-examples 
 
 
   # https://bugzilla.gnome.org/show_bug.cgi?id=655517
-  sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
+   sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
 
 make %{?_smp_mflags} V=1
 
@@ -210,22 +216,22 @@ find $RPM_BUILD_ROOT -name '*.a' -exec rm -f {} ';'
 
 %changelog
 
-* Fri Jan 27 2017 David Vásquez <davidjeremias82 AT gmail DOT com> 1.11.1-1
-- Updated to 1.11.1
+* Fri Jan 27 2017 David Vásquez <davidva AT tutanota DOT com> 1.11.1-1.20170202git4b7a521
+- Updated to 1.11.1-1.20170202git4b7a521
 
-* Sat Oct 15 2016 David Vásquez <davidjeremias82 AT gmail DOT com> 1.9.90-1
+* Sat Oct 15 2016 David Vásquez <davidva AT tutanota DOT com> 1.9.90-1
 - Updated to 1.9.90
 
-* Thu Oct 06 2016 David Vásquez <davidjeremias82 AT gmail DOT com> 1.9.2-1
+* Thu Oct 06 2016 David Vásquez <davidva AT tutanota DOT com> 1.9.2-1
 - Updated to 1.9.2
 
-* Fri Jul 08 2016 David Vásquez <davidjeremias82 AT gmail DOT com> 1.9.1-1
+* Fri Jul 08 2016 David Vásquez <davidva AT tutanota DOT com> 1.9.1-1
 - Updated to 1.9.1
 
-* Thu Jun 23 2016 David Vásquez <davidjeremias82 AT gmail DOT com> 1.8.2-1
+* Thu Jun 23 2016 David Vásquez <davidva AT tutanota DOT com> 1.8.2-1
 - Updated
 
-* Wed Apr 20 2016 David Vásquez <davidjeremias82 AT gmail DOT com> 1.8.1-1
+* Wed Apr 20 2016 David Vásquez <davidva AT tutanota DOT com> 1.8.1-1
 - Updated to 1.8.1
 
 * Sat Sep 26 2015 Kalev Lember <klember@redhat.com> - 1.6.0-2
