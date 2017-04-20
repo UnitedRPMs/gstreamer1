@@ -124,7 +124,7 @@ chrpath --delete $RPM_BUILD_ROOT%{_libexecdir}/gstreamer-%{majorminor}/gst-ptp-h
 chrpath --delete $RPM_BUILD_ROOT%{_bindir}/gst-inspect-1.0
 chrpath --delete $RPM_BUILD_ROOT%{_bindir}/gst-launch-1.0
 chrpath --delete $RPM_BUILD_ROOT%{_bindir}/gst-typefind-1.0
-chrpath --delete $RPM_BUILD_ROOT%{_datadir}/bash-completion/helpers/gst-completion-helper-%{majorminor}
+# chrpath --delete $RPM_BUILD_ROOT%{_datadir}/bash-completion/helpers/gst-completion-helper-%{majorminor}
 
 %find_lang gstreamer-%{majorminor}
 # Clean out files that should not be part of the rpm.
@@ -173,7 +173,7 @@ find $RPM_BUILD_ROOT -name '*.a' -exec rm -f {} ';'
 %{_datadir}/bash-completion/completions/gst-inspect-1.0
 %{_datadir}/bash-completion/completions/gst-launch-1.0
 %{_datadir}/bash-completion/helpers/gst
-%{_datadir}/bash-completion/helpers/gst-completion-helper-1.0
+# {_datadir}/bash-completion/helpers/gst-completion-helper-1.0
 
 %files devel
 %dir %{_includedir}/gstreamer-%{majorminor}
