@@ -1,7 +1,7 @@
 %global         majorminor      1.0
 
-%global gitdate 20170224
-%global commit0 e4a7200c63c82ccdeb23915c3f4949c784063052
+%global gitdate 20170420
+%global commit0 47047992fca1e8fb972d455ba48ab207ddffd2c4
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global gver .%{gitdate}git%{shortcommit0}
 
@@ -10,8 +10,8 @@
 %global         _gobject_introspection  1.31.1
 
 Name:           gstreamer1
-Version:        1.11.2
-Release:        1%{?gver}%{dist}
+Version:        1.11.90
+Release:        2%{?gver}%{dist}
 Summary:        GStreamer streaming media framework runtime
 
 License:        LGPLv2+
@@ -215,6 +215,9 @@ find $RPM_BUILD_ROOT -name '*.a' -exec rm -f {} ';'
 
 
 %changelog
+
+* Thu Apr 20 2017 David Vásquez <davidva AT tutanota DOT com> 1.11.90-2.20170420git4704799
+- Updated to 1.11.90-2.20170420git4704799
 
 * Fri Jan 27 2017 David Vásquez <davidva AT tutanota DOT com> 1.11.2-1.20170224gite4a7200
 - Updated to 1.11.2-1.20170224gite4a7200
