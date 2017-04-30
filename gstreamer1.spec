@@ -215,7 +215,8 @@ find $RPM_BUILD_ROOT -name '*.a' -exec rm -f {} ';'
 
 
 %changelog
-* Thu Apr 20 2017 David Vásquez <davidva AT tutanota DOT com> 1.11.91-2.gita0d2f0a
+
+* Sat Apr 29 2017 David Vásquez <davidva AT tutanota DOT com> 1.11.91-2.gita0d2f0a
 - Updated to 1.11.91-2.gita0d2f0a
 
 * Thu Apr 20 2017 David Vásquez <davidva AT tutanota DOT com> 1.11.90-2.20170420git4704799
