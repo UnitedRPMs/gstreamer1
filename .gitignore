@@ -1,0 +1,6 @@
+BUILD/*
+BUILDROOT/*
+RPMS/*
+SPECS/*
+SRPMS/*
+gstreamer1*.tar.gz 
