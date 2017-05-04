@@ -101,6 +101,7 @@ CFLAGS="-g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wall -
   --enable-gtk-doc \
   --enable-debug \
   --disable-static \
+  --enable-silent-rules \
   --disable-tests --disable-examples 
 
 
