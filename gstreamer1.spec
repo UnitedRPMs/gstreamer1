@@ -108,7 +108,7 @@ CFLAGS="-g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wall -
   # https://bugzilla.gnome.org/show_bug.cgi?id=655517
    sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
 
-make %{?_smp_mflags} V=1
+make %{?_smp_mflags} V=0
 
 
 %install
