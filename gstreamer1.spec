@@ -1,7 +1,7 @@
 %global         majorminor      1.0
 
-%global gitdate 20170420
-%global commit0 7854a6597868eeb91bca7518ad73adcb3107f56d
+%global gitdate 20170624
+%global commit0 ab3f333dd036a9aea12c53b74e5b3b03b667c98a
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global gver .git%{shortcommit0}
 
@@ -10,7 +10,7 @@
 %global         _gobject_introspection  1.31.1
 
 Name:           gstreamer1
-Version:        1.12.0
+Version:        1.12.1
 Release:        2%{?gver}%{dist}
 Summary:        GStreamer streaming media framework runtime
 
@@ -216,6 +216,9 @@ find $RPM_BUILD_ROOT -name '*.a' -exec rm -f {} ';'
 
 
 %changelog
+
+* Sat Jun 24 2017 Unitedrpms Project <unitedrpms AT protonmail DOT com> - 1.12.1-2.gitab3f333
+- Updated to 1.12.1-2.gitab3f333
 
 * Thu May 25 2017 David Vásquez <davidva AT tutanota DOT com> 1.12.0-2.git7854a65
 - Updated to 1.12.0-2.git7854a65
