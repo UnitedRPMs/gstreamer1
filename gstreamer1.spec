@@ -169,6 +169,7 @@ find $RPM_BUILD_ROOT -name '*.a' -exec rm -f {} ';'
 %doc %{_mandir}/man1/gst-inspect-%{majorminor}.*
 %doc %{_mandir}/man1/gst-launch-%{majorminor}.*
 %doc %{_mandir}/man1/gst-typefind-%{majorminor}.*
+%doc %{_mandir}/man1/gst-stats-%{majorminor}.*
 
 
 %{_datadir}/bash-completion/completions/gst-inspect-1.0
