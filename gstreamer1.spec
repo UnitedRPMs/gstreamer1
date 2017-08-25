@@ -11,7 +11,7 @@
 
 Name:           gstreamer1
 Version:        1.12.2
-Release:        2%{?gver}%{dist}
+Release:        5%{?gver}%{dist}
 Summary:        GStreamer streaming media framework runtime
 
 License:        LGPLv2+
@@ -217,6 +217,9 @@ find $RPM_BUILD_ROOT -name '*.a' -exec rm -f {} ';'
 
 
 %changelog
+
+* Fri Aug 25 2017 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1.12.2-5.gitdca812c  
+- Automatic Mass Rebuild
 
 * Thu Jul 20 2017 Unitedrpms Project <unitedrpms AT protonmail DOT com> - 1.12.2-2.gitdca812c
 - Updated 1.12.2-2.gitdca812c
