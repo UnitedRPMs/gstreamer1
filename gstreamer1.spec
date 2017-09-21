@@ -97,7 +97,7 @@ CFLAGS="-g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wall -
 
 %configure \
   --with-package-name='Fedora GStreamer package' \
-  --with-package-origin='http://download.fedoraproject.org' \
+  --with-package-origin='https://unitedrpms.github.io/' \
   --enable-gtk-doc \
   --enable-debug \
   --disable-static \
