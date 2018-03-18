@@ -34,14 +34,14 @@ BuildRequires:  chrpath
 ### documentation requirements
 BuildRequires:  python2
 BuildRequires:  openjade
-BuildRequires:  jadetex
+#BuildRequires:  jadetex
 BuildRequires:  libxslt
 BuildRequires:  docbook-style-dsssl
 BuildRequires:  docbook-style-xsl
 BuildRequires:  docbook-utils
 BuildRequires:  transfig
 BuildRequires:  netpbm-progs
-BuildRequires:  tetex-dvips
+#BuildRequires:  tetex-dvips
 BuildRequires:  ghostscript
 BuildRequires:	gettext-devel
 BuildRequires:	git
