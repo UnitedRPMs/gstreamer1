@@ -1,7 +1,7 @@
 %global         majorminor      1.0
 
-%global gitdate 20181003
-%global commit0 3c586dec930c5c253da0cf49e3f3846243f0ecf5
+%global gitdate 20190117
+%global commit0 6ea4380230d1cca1d63196dfbd753af887b8b241
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global gver .git%{shortcommit0}
 
@@ -10,7 +10,7 @@
 %global         _gobject_introspection  1.31.1
 
 Name:           gstreamer1
-Version:        1.14.4
+Version:        1.15.1
 Release:        7%{?gver}%{dist}
 Summary:        GStreamer streaming media framework runtime
 
@@ -166,6 +166,11 @@ find $RPM_BUILD_ROOT -name '*.a' -exec rm -f {} ';'
 %{_libdir}/gstreamer-%{majorminor}/libgstcoretracers.so
 
 
+%{_datadir}/gdb/auto-load/usr/lib64/libgstreamer*-gdb.py
+%{_datadir}/gstreamer-1.0/gdb/glib_gobject_helper.py
+%{_datadir}/gstreamer-1.0/gdb/gst_gdb.py
+
+
 %doc %{_mandir}/man1/gst-inspect-%{majorminor}.*
 %doc %{_mandir}/man1/gst-launch-%{majorminor}.*
 %doc %{_mandir}/man1/gst-typefind-%{majorminor}.*
@@ -216,7 +221,12 @@ find $RPM_BUILD_ROOT -name '*.a' -exec rm -f {} ';'
 %doc %{_datadir}/gtk-doc/html/gstreamer-plugins-%{majorminor}
 
 
+
+
 %changelog
+
+* Thu Jan 17 2019 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1.15.1-7.git6ea4380
+- Updated to 1.15.1-7.git6ea4380
 
 * Wed Oct 03 2018 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1.14.4-7.git3c586de
 - Updated to 1.14.4-7.git3c586de
