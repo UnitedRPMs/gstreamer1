@@ -166,7 +166,7 @@ find $RPM_BUILD_ROOT -name '*.a' -exec rm -f {} ';'
 %{_libdir}/gstreamer-%{majorminor}/libgstcoretracers.so
 
 
-%{_datadir}/gdb/auto-load/usr/lib64/libgstreamer*-gdb.py
+%{_datadir}/gdb/auto-load/usr/%{_lib}/libgstreamer*-gdb.py
 %{_datadir}/gstreamer-1.0/gdb/glib_gobject_helper.py
 %{_datadir}/gstreamer-1.0/gdb/gst_gdb.py
 
