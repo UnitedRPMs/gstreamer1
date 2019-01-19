@@ -132,12 +132,10 @@ chrpath --delete $RPM_BUILD_ROOT%{_bindir}/gst-typefind-1.0
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -name '*.a' -exec rm -f {} ';'
 
-
-%post -p /sbin/ldconfig
-
-
-%postun -p /sbin/ldconfig
-
+# Mangling fix
+sed -i '1 i\#!/usr/bin/python2' $RPM_BUILD_ROOT%{_datadir}/gdb/auto-load/usr/%{_lib}/libgstreamer*-gdb.py
+sed -i '1 i\#!/usr/bin/python2' $RPM_BUILD_ROOT%{_datadir}/gstreamer-1.0/gdb/glib_gobject_helper.py
+sed -i '1 i\#!/usr/bin/python2' $RPM_BUILD_ROOT%{_datadir}/gstreamer-1.0/gdb/gst_gdb.py
 
 %files -f gstreamer-%{majorminor}.lang
 %license COPYING
