@@ -32,6 +32,7 @@ BuildRequires:  check-devel
 BuildRequires:  gtk-doc >= 1.3
 BuildRequires:  gettext
 BuildRequires:  pkgconfig
+BuildRequires:	make
 
 BuildRequires:  chrpath
 
