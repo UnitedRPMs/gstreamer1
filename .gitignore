@@ -5,3 +5,4 @@ SPECS/*
 SRPMS/*
 gstreamer1*.tar.gz 
 .directory
+*.rpm

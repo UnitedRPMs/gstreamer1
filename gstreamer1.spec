@@ -9,13 +9,16 @@
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global gver .git%{shortcommit0}
 
+%define _legacy_common_support 1
+
+
 %global         _glib2                  2.32.0
 %global         _libxml2                2.4.0
 %global         _gobject_introspection  1.31.1
 
 Name:           gstreamer1
 Version:        1.16.2
-Release:        7%{?gver}%{dist}
+Release:        8%{?gver}%{dist}
 Summary:        GStreamer streaming media framework runtime
 
 License:        LGPLv2+
@@ -55,6 +58,17 @@ BuildRequires:	intltool
 %if !0%{?rhel}
 BuildRequires:  xfig
 %endif
+# New
+BuildRequires: meson
+BuildRequires: libunwind-devel
+BuildRequires: cmake
+BuildRequires: pkgconfig(libdw)
+BuildRequires: bash-completion
+BuildRequires: pkgconfig(gtk+-3.0)
+BuildRequires: libcap-devel 
+BuildRequires: gmp-devel 
+BuildRequires: valgrind-devel 
+BuildRequires: gsl-devel
 
 %description
 GStreamer is a streaming media framework, based on graphs of filters which
@@ -93,44 +107,35 @@ GStreamer streaming media framework.
 %autosetup -n gstreamer-%{commit0}  
 rm -rf common && git clone git://anongit.freedesktop.org/gstreamer/common 
 
+sed -i "s/^executable('gst-plugin-scanner',/executable('gst-plugin-scanner-%{_target_cpu}',/" libs/gst/helpers/meson.build
+sed -i "s/gst-plugin-scanner/gst-plugin-scanner-%{_target_cpu}/" meson.build
+
 %build
-NOCONFIGURE=1 ./autogen.sh
+export PYTHON=%{_bindir}/python3
 
-%if 0%{?fedora} >= 26
-CFLAGS="-g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wall -Wno-error" CXXFLAGS="-g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wall -Wno-error" CPPFLAGS="-Wdate-time -D_FORTIFY_SOURCE=2" LDFLAGS="-Wl,-z,relro -Wl,-z,defs -Wl,-O1 -Wl,--as-needed"
-%endif
+%meson -D ptp-helper-permissions=capabilities \
+    -D dbghelp=disabled \
+    -D examples=disabled \
+    -D benchmarks=disabled \
+    -D tests=disabled \
+    -D gtk_doc=enabled \
+    -D package-name="Fedora GStreamer package" \
+    -D package-origin="https://unitedrpms.github.io/"
 
-%configure \
-  --with-package-name='Fedora GStreamer package' \
-  --with-package-origin='https://unitedrpms.github.io/' \
-  --enable-gtk-doc \
-  --enable-debug \
-  --disable-static \
-  --enable-silent-rules \
-  --disable-tests --disable-examples 
-
-
-  # https://bugzilla.gnome.org/show_bug.cgi?id=655517
-   sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
-
-make %{?_smp_mflags} V=0
-
+%meson_build 
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make install DESTDIR=$RPM_BUILD_ROOT
+%meson_install 
+
 # Remove rpath.
 chrpath --delete $RPM_BUILD_ROOT%{_libdir}/libgstbase-1.0.so.*
 chrpath --delete $RPM_BUILD_ROOT%{_libdir}/libgstcheck-1.0.so.*
 chrpath --delete $RPM_BUILD_ROOT%{_libdir}/libgstcontroller-1.0.so.* 
 chrpath --delete $RPM_BUILD_ROOT%{_libdir}/libgstnet-1.0.so.*
-chrpath --delete $RPM_BUILD_ROOT%{_libdir}/gstreamer-%{majorminor}/libgstcoreelements.so
-chrpath --delete $RPM_BUILD_ROOT%{_libexecdir}/gstreamer-%{majorminor}/gst-plugin-scanner
 chrpath --delete $RPM_BUILD_ROOT%{_libexecdir}/gstreamer-%{majorminor}/gst-ptp-helper
 chrpath --delete $RPM_BUILD_ROOT%{_bindir}/gst-inspect-1.0
 chrpath --delete $RPM_BUILD_ROOT%{_bindir}/gst-launch-1.0
 chrpath --delete $RPM_BUILD_ROOT%{_bindir}/gst-typefind-1.0
-# chrpath --delete $RPM_BUILD_ROOT%{_datadir}/bash-completion/helpers/gst-completion-helper-%{majorminor}
 
 %find_lang gstreamer-%{majorminor}
 # Clean out files that should not be part of the rpm.
@@ -219,14 +224,14 @@ sed -i '1 i\#!/usr/bin/python2' $RPM_BUILD_ROOT%{_datadir}/gstreamer-1.0/gdb/gst
 %{_libdir}/pkgconfig/gstreamer-net-%{majorminor}.pc
 
 %files devel-docs
-%doc %{_datadir}/gtk-doc/html/gstreamer-%{majorminor}
-%doc %{_datadir}/gtk-doc/html/gstreamer-libs-%{majorminor}
-%doc %{_datadir}/gtk-doc/html/gstreamer-plugins-%{majorminor}
-
-
+%doc AUTHORS ChangeLog NEWS README RELEASE
+%{_datadir}/gtk-doc/html/*
 
 
 %changelog
+
+* Sun Mar 22 2020 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1.16.2-8.git1294936
+- Migration to meson
 
 * Wed Dec 04 2019 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1.16.2-7.git1294936
 - Updated to 1.16.2-7.git1294936
