@@ -4,8 +4,8 @@
 
 %global         majorminor      1.0
 
-%global gitdate 20191204
-%global commit0 129493687793cbc109d6211bb0e465218e383e9d
+%global gitdate 20200710
+%global commit0 61ed49f49657be1b7b5a48e14d93765e486b5cb2
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global gver .git%{shortcommit0}
 
@@ -17,8 +17,8 @@
 %global         _gobject_introspection  1.31.1
 
 Name:           gstreamer1
-Version:        1.16.2
-Release:        8%{?gver}%{dist}
+Version:        1.17.2
+Release:        7%{?gver}%{dist}
 Summary:        GStreamer streaming media framework runtime
 
 License:        LGPLv2+
@@ -104,21 +104,20 @@ GStreamer streaming media framework.
 
 
 %prep
-%autosetup -n gstreamer-%{commit0}  
+%autosetup -n gstreamer-%{commit0}  -p1
 rm -rf common && git clone git://anongit.freedesktop.org/gstreamer/common 
 
 sed -i "s/^executable('gst-plugin-scanner',/executable('gst-plugin-scanner-%{_target_cpu}',/" libs/gst/helpers/meson.build
 sed -i "s/gst-plugin-scanner/gst-plugin-scanner-%{_target_cpu}/" meson.build
 
 %build
-export PYTHON=%{_bindir}/python3
 
 %meson -D ptp-helper-permissions=capabilities \
     -D dbghelp=disabled \
     -D examples=disabled \
     -D benchmarks=disabled \
     -D tests=disabled \
-    -D gtk_doc=enabled \
+    -D doc=disabled \
     -D package-name="Fedora GStreamer package" \
     -D package-origin="https://unitedrpms.github.io/"
 
@@ -225,10 +224,12 @@ sed -i '1 i\#!/usr/bin/python2' $RPM_BUILD_ROOT%{_datadir}/gstreamer-1.0/gdb/gst
 
 %files devel-docs
 %doc AUTHORS ChangeLog NEWS README RELEASE
-%{_datadir}/gtk-doc/html/*
 
 
 %changelog
+
+* Fri Jul 10 2020 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1.17.2-7.git61ed49f
+- Updated to 1.17.2
 
 * Sun Mar 22 2020 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1.16.2-8.git1294936
 - Migration to meson
