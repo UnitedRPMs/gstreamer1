@@ -118,7 +118,7 @@ sed -i "s/gst-plugin-scanner/gst-plugin-scanner-%{_target_cpu}/" meson.build
     -D benchmarks=disabled \
     -D tests=disabled \
     -D doc=disabled \
-    -D package-name="Fedora GStreamer package" \
+    -D package-name="UnitedRPMs GStreamer package" \
     -D package-origin="https://unitedrpms.github.io/"
 
 %meson_build 
