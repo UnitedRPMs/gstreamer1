@@ -144,6 +144,7 @@ find $RPM_BUILD_ROOT -name '*.a' -exec rm -f {} ';'
 sed -i '1 i\#!/usr/bin/python2' $RPM_BUILD_ROOT%{_datadir}/gdb/auto-load/usr/%{_lib}/libgstreamer*-gdb.py
 sed -i '1 i\#!/usr/bin/python2' $RPM_BUILD_ROOT%{_datadir}/gstreamer-1.0/gdb/glib_gobject_helper.py
 sed -i '1 i\#!/usr/bin/python2' $RPM_BUILD_ROOT%{_datadir}/gstreamer-1.0/gdb/gst_gdb.py
+sed -i 's|/usr/bin/env python|/usr/bin/python3|g' $RPM_BUILD_ROOT/usr/libexec/gstreamer-1.0/gst-plugins-doc-cache-generator
 
 %files -f gstreamer-%{majorminor}.lang
 %license COPYING
