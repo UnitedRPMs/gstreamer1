@@ -15,6 +15,8 @@
 %global         _libxml2                2.4.0
 %global         _gobject_introspection  1.31.1
 
+%global debug_package %{nil}
+
 Name:           gstreamer1
 Version:        1.17.90
 Release:        7%{?gver}%{dist}
