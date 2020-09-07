@@ -1,6 +1,3 @@
-# This package depends on automagic byte compilation
-# https://fedoraproject.org/wiki/Changes/No_more_automagic_Python_bytecompilation_phase_2
-%global _python_bytecompile_extra 0
 
 %global         majorminor      1.0
 
@@ -19,7 +16,7 @@
 
 Name:           gstreamer1
 Version:        1.17.90
-Release:        7%{?gver}%{dist}
+Release:        8%{?gver}%{dist}
 Summary:        GStreamer streaming media framework runtime
 
 License:        LGPLv2+
@@ -41,7 +38,7 @@ BuildRequires:	make
 BuildRequires:  chrpath
 
 ### documentation requirements
-BuildRequires:  python2
+#BuildRequires:  python2
 BuildRequires:  openjade
 #BuildRequires:  jadetex
 BuildRequires:  libxslt
@@ -143,10 +140,10 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -name '*.a' -exec rm -f {} ';'
 
 # Mangling fix
-sed -i '1 i\#!/usr/bin/python2' $RPM_BUILD_ROOT%{_datadir}/gdb/auto-load/usr/%{_lib}/libgstreamer*-gdb.py
-sed -i '1 i\#!/usr/bin/python2' $RPM_BUILD_ROOT%{_datadir}/gstreamer-1.0/gdb/glib_gobject_helper.py
-sed -i '1 i\#!/usr/bin/python2' $RPM_BUILD_ROOT%{_datadir}/gstreamer-1.0/gdb/gst_gdb.py
-sed -i 's|/usr/bin/env python|/usr/bin/python3|g' $RPM_BUILD_ROOT/usr/libexec/gstreamer-1.0/gst-plugins-doc-cache-generator
+#sed -i '1 i\#!/usr/bin/python2' $RPM_BUILD_ROOT%{_datadir}/gdb/auto-load/usr/%{_lib}/libgstreamer*-gdb.py
+#sed -i '1 i\#!/usr/bin/python2' $RPM_BUILD_ROOT%{_datadir}/gstreamer-1.0/gdb/glib_gobject_helper.py
+#sed -i '1 i\#!/usr/bin/python2' $RPM_BUILD_ROOT%{_datadir}/gstreamer-1.0/gdb/gst_gdb.py
+#sed -i 's|/usr/bin/env python|/usr/bin/python3|g' $RPM_BUILD_ROOT/usr/libexec/gstreamer-1.0/gst-plugins-doc-cache-generator
 
 %files -f gstreamer-%{majorminor}.lang
 %license COPYING
@@ -229,6 +226,9 @@ sed -i 's|/usr/bin/env python|/usr/bin/python3|g' $RPM_BUILD_ROOT/usr/libexec/gs
 
 
 %changelog
+
+* Sun Sep 06 2020 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1.17.90-8.gite97c520
+- Rebuilt
 
 * Tue Aug 25 2020 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1.17.90-7.gite97c520
 - Updated to 1.17.90
