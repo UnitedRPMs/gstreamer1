@@ -1,7 +1,7 @@
 
 %global         majorminor      1.0
 
-%global commit0 e97c520f063bb101d4bd2b91ee8940976e2b6ad5
+%global commit0 96148da56f9cbf23120e51ce59ab90f94d8b19b8
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global gver .git%{shortcommit0}
 
@@ -15,8 +15,8 @@
 %global debug_package %{nil}
 
 Name:           gstreamer1
-Version:        1.17.90
-Release:        8%{?gver}%{dist}
+Version:        1.18.0
+Release:        7%{?gver}%{dist}
 Summary:        GStreamer streaming media framework runtime
 
 License:        LGPLv2+
@@ -226,6 +226,9 @@ find $RPM_BUILD_ROOT -name '*.a' -exec rm -f {} ';'
 
 
 %changelog
+
+* Mon Sep 28 2020 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1.18.0-7.git96148da
+- Updated to 1.18.0
 
 * Sun Sep 06 2020 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1.17.90-8.gite97c520
 - Rebuilt
