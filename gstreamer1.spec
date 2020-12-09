@@ -1,7 +1,7 @@
 
 %global         majorminor      1.0
 
-%global commit0 29a8099d1d4bd8717c13923e710e92e67e335353
+%global commit0 6a62351b8a8afce82d2ceba79f79dae6af5f15cf
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global gver .git%{shortcommit0}
 
@@ -15,7 +15,7 @@
 %global debug_package %{nil}
 
 Name:           gstreamer1
-Version:        1.18.1
+Version:        1.18.2
 Release:        7%{?gver}%{dist}
 Summary:        GStreamer streaming media framework runtime
 
@@ -226,6 +226,9 @@ find $RPM_BUILD_ROOT -name '*.a' -exec rm -f {} ';'
 
 
 %changelog
+
+* Mon Dec 07 2020 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1.18.2-7.git6a62351
+- Updated to 1.18.2
 
 * Thu Oct 29 2020 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1.18.1-7.git29a8099
 - Updated to 1.18.1
