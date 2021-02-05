@@ -5,7 +5,7 @@
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global gver .git%{shortcommit0}
 
-%define _legacy_common_support 1
+#define _legacy_common_support 1
 
 
 %global         _glib2                  2.32.0
@@ -34,6 +34,7 @@ BuildRequires:  gtk-doc >= 1.3
 BuildRequires:  gettext
 BuildRequires:  pkgconfig
 BuildRequires:	make
+BuildRequires:	ninja-build
 
 BuildRequires:  chrpath
 
@@ -116,6 +117,7 @@ sed -i "s/gst-plugin-scanner/gst-plugin-scanner-%{_target_cpu}/" meson.build
     -D benchmarks=disabled \
     -D tests=disabled \
     -D doc=disabled \
+    -D gobject-cast-checks=disabled \
     -D package-name="UnitedRPMs GStreamer package" \
     -D package-origin="https://unitedrpms.github.io/"
 
