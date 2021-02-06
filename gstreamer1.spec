@@ -5,7 +5,7 @@
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global gver .git%{shortcommit0}
 
-#define _legacy_common_support 1
+%define _legacy_common_support 1
 
 
 %global         _glib2                  2.32.0
@@ -110,6 +110,8 @@ sed -i "s/^executable('gst-plugin-scanner',/executable('gst-plugin-scanner-%{_ta
 sed -i "s/gst-plugin-scanner/gst-plugin-scanner-%{_target_cpu}/" meson.build
 
 %build
+
+export LIBS=-lcxa
 
 %meson -D ptp-helper-permissions=capabilities \
     -D dbghelp=disabled \
