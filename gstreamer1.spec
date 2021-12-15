@@ -1,8 +1,11 @@
+# Force out of source build
+%undefine __cmake_in_source_build
 
 %global         majorminor      1.0
+%global 	meson_conf 	meson --buildtype=release --prefix=/usr --libdir=%{_libdir} --libexecdir=/usr/libexec --bindir=/usr/bin --sbindir=/usr/sbin --includedir=/usr/include --datadir=/usr/share --mandir=/usr/share/man --infodir=/usr/share/info --localedir=/usr/share/locale --sysconfdir=/etc
 
-%global commit0 b4ca58df7624b005a33e182a511904d7cceea890
-%global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
+%global commit0 f513c289b0ef48a13aa0b80ba65a0c76c2a77cd2
+%global shortcommit0 %(c=%{commit0}; echo ${c:0:8})
 %global gver .git%{shortcommit0}
 
 %define _legacy_common_support 1
@@ -15,13 +18,13 @@
 %global debug_package %{nil}
 
 Name:           gstreamer1
-Version:        1.19.2
+Version:        1.19.3
 Release:        7%{?gver}%{dist}
 Summary:        GStreamer streaming media framework runtime
 
 License:        LGPLv2+
 URL:            http://gstreamer.freedesktop.org/
-Source0: 	https://github.com/GStreamer/gstreamer/archive/%{commit0}.tar.gz#/%{name}-%{shortcommit0}.tar.gz
+Source0:	https://gitlab.freedesktop.org/gstreamer/gstreamer/-/archive/%{commit0}/gstreamer-%{commit0}.tar.gz
 
 BuildRequires:  glib2-devel >= %{_glib2}
 BuildRequires:  libxml2-devel >= %{_libxml2}
@@ -59,6 +62,8 @@ BuildRequires:  xfig
 %endif
 # New
 BuildRequires: meson
+BuildRequires: gcc
+BuildRequires: git
 BuildRequires: libunwind-devel
 BuildRequires: cmake
 BuildRequires: pkgconfig(libdw)
@@ -68,6 +73,17 @@ BuildRequires: libcap-devel
 BuildRequires: gmp-devel 
 BuildRequires: valgrind-devel 
 BuildRequires: gsl-devel
+BuildRequires: elfutils-devel
+BuildRequires: bash-completion
+BuildRequires: opus-devel
+BuildRequires: libogg-devel
+BuildRequires: json-glib-devel
+BuildRequires: libdv-devel
+BuildRequires: libjpeg-turbo-devel
+BuildRequires: lame-devel
+BuildRequires: libglvnd-devel
+BuildRequires:  pkgconfig(gbm)
+
 
 %description
 GStreamer is a streaming media framework, based on graphs of filters which
@@ -106,130 +122,133 @@ GStreamer streaming media framework.
 %autosetup -n gstreamer-%{commit0}  -p1
 rm -rf common && git clone git://anongit.freedesktop.org/gstreamer/common 
 
-sed -i "s/^executable('gst-plugin-scanner',/executable('gst-plugin-scanner-%{_target_cpu}',/" libs/gst/helpers/meson.build
 sed -i "s/gst-plugin-scanner/gst-plugin-scanner-%{_target_cpu}/" meson.build
 
-%build
 
+%build
+export PYTHON=%{_bindir}/python3
 export LIBS=-lcxa
 
-%meson -D ptp-helper-permissions=capabilities \
-    -D dbghelp=disabled \
+%meson_conf _build \
+    -D python=disabled \
     -D examples=disabled \
-    -D benchmarks=disabled \
     -D tests=disabled \
+    -D ptp-helper-permissions=capabilities \
+    -D dbghelp=disabled \
     -D doc=disabled \
-    -D gobject-cast-checks=disabled \
+    -D gtk_doc=disabled \
+    -D check=enabled \
+    -D nls=disabled \
+    -D orc=disabled \
+    -D validate=disabled \
+    -D base=disabled \
+    -D good=disabled \
+    -D bad=disabled \
+    -D ugly=disabled \
+    -D libav=disabled \
+    -D devtools=disabled \
+    -D ges=disabled \
+    -D gst-examples=disabled \
+    -D libnice=disabled \
+    -D graphene=disabled \
+    -D gl=disabled \
+    -D vorbis=disabled \
+    -D rtsp_server=disabled \
+    -D vaapi=disabled \
     -D package-name="UnitedRPMs GStreamer package" \
     -D package-origin="https://unitedrpms.github.io/"
 
-%meson_build 
+%meson_build -C _build
 
 %install
-%meson_install 
+%meson_install -C _build 
+
 
 # Remove rpath.
-chrpath --delete $RPM_BUILD_ROOT%{_libdir}/libgstbase-1.0.so.*
-chrpath --delete $RPM_BUILD_ROOT%{_libdir}/libgstcheck-1.0.so.*
-chrpath --delete $RPM_BUILD_ROOT%{_libdir}/libgstcontroller-1.0.so.* 
-chrpath --delete $RPM_BUILD_ROOT%{_libdir}/libgstnet-1.0.so.*
-chrpath --delete $RPM_BUILD_ROOT%{_libexecdir}/gstreamer-%{majorminor}/gst-ptp-helper
-chrpath --delete $RPM_BUILD_ROOT%{_bindir}/gst-inspect-1.0
-chrpath --delete $RPM_BUILD_ROOT%{_bindir}/gst-launch-1.0
-chrpath --delete $RPM_BUILD_ROOT%{_bindir}/gst-typefind-1.0
+chrpath --delete $RPM_BUILD_ROOT%{_libdir}/libgstbase-%{majorminor}.so.*
+chrpath --delete $RPM_BUILD_ROOT%{_libdir}/libgstcontroller-%{majorminor}.so.* 
+chrpath --delete $RPM_BUILD_ROOT%{_libdir}/libgstnet-%{majorminor}.so.*
 
-%find_lang gstreamer-%{majorminor}
+#find_lang gstreamer-%{majorminor}
 # Clean out files that should not be part of the rpm.
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -name '*.a' -exec rm -f {} ';'
 
-# Mangling fix
-#sed -i '1 i\#!/usr/bin/python2' $RPM_BUILD_ROOT%{_datadir}/gdb/auto-load/usr/%{_lib}/libgstreamer*-gdb.py
-#sed -i '1 i\#!/usr/bin/python2' $RPM_BUILD_ROOT%{_datadir}/gstreamer-1.0/gdb/glib_gobject_helper.py
-#sed -i '1 i\#!/usr/bin/python2' $RPM_BUILD_ROOT%{_datadir}/gstreamer-1.0/gdb/gst_gdb.py
-#sed -i 's|/usr/bin/env python|/usr/bin/python3|g' $RPM_BUILD_ROOT/usr/libexec/gstreamer-1.0/gst-plugins-doc-cache-generator
+# Included in gst-editing-services
+#rm -rf   $RPM_BUILD_ROOT/usr/include/gstreamer-%{majorminor}/ges/
+#rm -f $RPM_BUILD_ROOT/usr/lib64/gst-validate-launcher/python/launcher/apps/geslaunch.py
+#rm -f $RPM_BUILD_ROOT/%{_bindir}/ges-launch-%{majorminor}
+#rm -f $RPM_BUILD_ROOT/usr/share/gstreamer-%{majorminor}/validate/scenarios/ges-edit-clip-while-paused.scenario
+#rm -f $RPM_BUILD_ROOT/usr/lib64/pkgconfig/gst-editing-services-%{majorminor}.pc
+#rm -f $RPM_BUILD_ROOT/usr/share/man/man1/ges-launch-%{majorminor}.1.gz
 
-%files -f gstreamer-%{majorminor}.lang
-%license COPYING
-%doc AUTHORS NEWS README RELEASE
+#rm -f /usr/include/GL/glext.h
+
+
+%ldconfig_scriptlets
+
+
+%files 
+%license LICENSE
+%doc README.md
+
+
+%{_bindir}/gst-inspect-%{majorminor}
+%{_bindir}/gst-launch-%{majorminor}
+%{_bindir}/gst-stats-%{majorminor}
+%{_bindir}/gst-typefind-%{majorminor}
+
 %{_libdir}/libgstreamer-%{majorminor}.so.*
 %{_libdir}/libgstbase-%{majorminor}.so.*
-%{_libdir}/libgstcheck-%{majorminor}.so.*
 %{_libdir}/libgstcontroller-%{majorminor}.so.*
 %{_libdir}/libgstnet-%{majorminor}.so.*
 
+
+%{_libdir}/libgstcheck-%{majorminor}.so.*
+%{_libdir}/girepository-%{majorminor}/
 %{_libexecdir}/gstreamer-%{majorminor}/
 
 %dir %{_libdir}/gstreamer-%{majorminor}
 %{_libdir}/gstreamer-%{majorminor}/libgstcoreelements.so
-
-%{_libdir}/girepository-1.0/Gst-%{majorminor}.typelib
-%{_libdir}/girepository-1.0/GstBase-%{majorminor}.typelib
-%{_libdir}/girepository-1.0/GstCheck-%{majorminor}.typelib
-%{_libdir}/girepository-1.0/GstController-%{majorminor}.typelib
-%{_libdir}/girepository-1.0/GstNet-%{majorminor}.typelib
-
-%{_bindir}/gst-inspect-%{majorminor}
-%{_bindir}/gst-launch-%{majorminor}
-%{_bindir}/gst-typefind-%{majorminor}
-%{_bindir}/gst-stats-%{majorminor}
-%{_libdir}/gstreamer-%{majorminor}/libgstcoretracers.so
-
-
 %{_datadir}/gdb/auto-load/usr/%{_lib}/libgstreamer*-gdb.py
-%{_datadir}/gstreamer-1.0/gdb/glib_gobject_helper.py
-%{_datadir}/gstreamer-1.0/gdb/gst_gdb.py
-
-
-%doc %{_mandir}/man1/gst-inspect-%{majorminor}.*
-%doc %{_mandir}/man1/gst-launch-%{majorminor}.*
-%doc %{_mandir}/man1/gst-typefind-%{majorminor}.*
-%doc %{_mandir}/man1/gst-stats-%{majorminor}.*
-
-
-%{_datadir}/bash-completion/completions/gst-inspect-1.0
-%{_datadir}/bash-completion/completions/gst-launch-1.0
+%{_datadir}/gstreamer-%{majorminor}/gdb/glib_gobject_helper.py
+%{_datadir}/gstreamer-%{majorminor}/gdb/gst_gdb.py
+%{_datadir}/bash-completion/completions/gst-inspect-%{majorminor}
+%{_datadir}/bash-completion/completions/gst-launch-%{majorminor}
 %{_datadir}/bash-completion/helpers/gst
-# {_datadir}/bash-completion/helpers/gst-completion-helper-1.0
+%{_mandir}/man1/gst-inspect-%{majorminor}.1.gz
+%{_mandir}/man1/gst-launch-%{majorminor}.1.gz
+%{_mandir}/man1/gst-stats-%{majorminor}.1.gz
+%{_mandir}/man1/gst-typefind-%{majorminor}.1.gz
 
 %files devel
 %dir %{_includedir}/gstreamer-%{majorminor}
 %dir %{_includedir}/gstreamer-%{majorminor}/gst
-%dir %{_includedir}/gstreamer-%{majorminor}/gst/base
-%dir %{_includedir}/gstreamer-%{majorminor}/gst/check
-%dir %{_includedir}/gstreamer-%{majorminor}/gst/controller
-%dir %{_includedir}/gstreamer-%{majorminor}/gst/net
-%{_includedir}/gstreamer-%{majorminor}/gst/*.h
-%{_includedir}/gstreamer-%{majorminor}/gst/base/*.h
-%{_includedir}/gstreamer-%{majorminor}/gst/check/*.h
-%{_includedir}/gstreamer-%{majorminor}/gst/controller/*.h
-%{_includedir}/gstreamer-%{majorminor}/gst/net/*.h
+%{_includedir}/gstreamer-%{majorminor}/gst/
 
+%{_datadir}/gir-%{majorminor}/
+%{_datadir}/aclocal/gst-element-check-%{majorminor}.m4
 %{_libdir}/libgstreamer-%{majorminor}.so
 %{_libdir}/libgstbase-%{majorminor}.so
-%{_libdir}/libgstcheck-%{majorminor}.so
 %{_libdir}/libgstcontroller-%{majorminor}.so
 %{_libdir}/libgstnet-%{majorminor}.so
-
-%{_datadir}/gir-1.0/Gst-%{majorminor}.gir
-%{_datadir}/gir-1.0/GstBase-%{majorminor}.gir
-%{_datadir}/gir-1.0/GstCheck-%{majorminor}.gir
-%{_datadir}/gir-1.0/GstController-%{majorminor}.gir
-%{_datadir}/gir-1.0/GstNet-%{majorminor}.gir
-
-%{_datadir}/aclocal/gst-element-check-%{majorminor}.m4
-
 %{_libdir}/pkgconfig/gstreamer-%{majorminor}.pc
 %{_libdir}/pkgconfig/gstreamer-base-%{majorminor}.pc
 %{_libdir}/pkgconfig/gstreamer-controller-%{majorminor}.pc
-%{_libdir}/pkgconfig/gstreamer-check-%{majorminor}.pc
 %{_libdir}/pkgconfig/gstreamer-net-%{majorminor}.pc
+%{_libdir}/pkgconfig/gstreamer-check-%{majorminor}.pc
+%{_libdir}/libgstcheck-%{majorminor}.so
+%{_libdir}/gstreamer-%{majorminor}/libgstcoretracers.so
+
 
 %files devel-docs
-%doc AUTHORS ChangeLog NEWS README RELEASE
+%doc README.md
 
 
 %changelog
+
+* Wed Nov 17 2021 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1.19.3-7.gitf513c28
+- Updated to 1.19.3
 
 * Mon Oct 04 2021 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1.19.2-7.gitb4ca58d
 - Updated to 1.19.2
